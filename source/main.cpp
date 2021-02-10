@@ -1,20 +1,21 @@
-// Copyright 2021 Roger Peralta Aranibar
 #include <condition_variable>
 #include <iostream>
 #include <mutex>
 #include <random>
 #include <sstream>
 #include <thread>
+#include <cstdlib>
+#include <string>
 
 #include "b-link.hpp"
+
+using namespace std; 
 
 std::size_t NUMBER_THREADS = 8;
 
 const std::size_t NUMBER_OPERATIONS = 100000;
-
 int MIN_VALUE = 1;
 int MAX_VALUE = 15000;
-
 std::random_device rd;
 
 class TreeSearcher {
@@ -25,8 +26,8 @@ class TreeSearcher {
   void operator()() {
     std::uniform_int_distribution<int> distribution(MIN_VALUE, MAX_VALUE);
     for (std::size_t i = 0; i < NUMBER_OPERATIONS; ++i) {
-      std::cout << distribution(rd) << "\n";
-      // b_link_->search(distribution(rd));
+      //std::cout << distribution(rd) << "\n";
+      b_link_->search(distribution(rd));
     }
   }
 
@@ -38,8 +39,8 @@ class TreeSearcher {
 void sequential_insert(EDA::Concurrent::BLinkTree<3, int> *b_link) {
   std::uniform_int_distribution<int> distribution(MIN_VALUE, MAX_VALUE);
   for (std::size_t i = 0; i < NUMBER_OPERATIONS; ++i) {
-    std::cout << distribution(rd) << "\n";
-    // b_link->insert(distribution(rd));
+    //std::cout << distribution(rd) << "\n";
+    b_link->insert(distribution(rd));
   }
 }
 
@@ -63,7 +64,7 @@ void parallel_insert(EDA::Concurrent::BLinkTree<3, int> *b_link) {
   for (std::size_t i = 0; i < NUMBER_OPERATIONS; ++i) {
     int value = distribution(rd);
     std::cout << value << "\n";
-    // b_link->insert(value);
+    b_link->insert(value);
   }
 }
 
@@ -72,7 +73,7 @@ void parallel_search(EDA::Concurrent::BLinkTree<3, int> *b_link) {
   for (std::size_t i = 0; i < NUMBER_OPERATIONS; ++i) {
     int value = distribution(rd);
     std::cout << value << "\n";
-    // b_link->search(value);
+    b_link->search(value);
   }
 }
 
@@ -147,6 +148,6 @@ void run_parallel_synchronous_test() {
 
 int main() {
   run_parallel_asynchronous_test();
-  run_parallel_synchronous_test();
+  //run_parallel_synchronous_test();
   return 0;
 }
